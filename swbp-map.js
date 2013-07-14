@@ -8,6 +8,7 @@ var swbpMapsModule = angular.module('swbp-google-map', []);
 function MapModel(opts) {
    var that = this;
    var mapInstance = null;
+   var drawingManager = null;
    var defaultOptions = {
        zoom: 8,
        draggable: false,
@@ -18,9 +19,31 @@ function MapModel(opts) {
        mapOptions: angular.extend({},defaultOptions,opts),
        drawMap: function() {
            mapInstance = new google.maps.Map(this.mapOptions.mapDiv,this.mapOptions);
+
+               drawingManager = new google.maps.drawing.DrawingManager({
+               drawingMode: google.maps.drawing.OverlayType.MARKER,
+               drawingControl: true,
+               drawingControlOptions: {
+                   position:google.maps.ControlPosition.TOP_LEFT,
+                   drawingModes: [
+                       google.maps.drawing.OverlayType.MARKER,
+                       google.maps.drawing.OverlayType.CIRCLE,
+                       google.maps.drawing.OverlayType.POLYGON,
+                       google.maps.drawing.OverlayType.POLYLINE,
+                       google.maps.drawing.OverlayType.RECTANGLE
+                   ]
+               },
+               circleOptions: {
+                   fillColor: '#ffff00',
+                   fillOpacity: 1,
+                   strokeWeight: 5,
+                   clickable: false,
+                   editable: true,
+                   zIndex: 1
+               }
+           });
+           drawingManager.setMap(mapInstance);
        }
-
-
 
    };
 }
